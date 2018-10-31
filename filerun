@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+  filerundb:
+    container_name: filerundb
+    image: mariadb:10.1
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpasswd
+      MYSQL_USER: filerun
+      MYSQL_PASSWORD: dbpasswd
+      MYSQL_DATABASE: filerundb
+    volumes:
+      - /docker/filerun/db:/var/lib/mysql
+
+  web:
+    image: afian/filerun
+    container_name: filerun
+    environment:
+      FR_DB_HOST: filerundb
+      FR_DB_PORT: 3306
+      FR_DB_NAME: filerundb
+      FR_DB_USER: filerun
+      FR_DB_PASS: levigato
+    links:
+     - filerundb:filerundb
+    depends_on:
+      - filerundb
+    ports:
+      - "8081:80"
+    volumes:
+      - /docker/filerun/html:/var/www/html
+      - /docker/filerun/user-files:/user-files
