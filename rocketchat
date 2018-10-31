@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+ db:
+  container_name: db
+  image: mongo:4.0
+  volumes:
+    - /docker/mongodb/db:/data/db
+    - /docker/mongodb/dump:/dump
+  command: mongod --smallfiles
+   
+ rocketchat:
+  container_name: rocketchat
+  image: rocketchat/rocket.chat:0.70.4
+  volumes:
+    - /docker/rocketchat/uploads:/app/uploads 
+  environment:
+    - MONGO_URL=mongodb://db:27017/rocketchat
+    - ROOT_URL=https://rocketchat.example.com
+  depends_on:
+    - db
+  dns: 192.168.1.1
