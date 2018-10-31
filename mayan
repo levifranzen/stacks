@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+ mayandb:
+  container_name: mayandb
+  image: postgres:9.5
+  environment:
+  - POSTGRES_USER=mayan 
+  - POSTGRES_DB=mayan 
+  - POSTGRES_PASSWORD=dbpasswd
+  volumes:
+    - /docker/mayan/db:/var/lib/postgresql/data
+    
+ mayan:
+  container_name: mayan
+  image: mayanedms/mayanedms:3.0.3
+  volumes:
+   - /docker/mayan/media:/var/lib/mayan
+  environment:
+   - MAYAN_DATABASE_ENGINE=django.db.backends.postgresql
+   - MAYAN_DATABASE_HOST=mayandb 
+   - MAYAN_DATABASE_NAME=mayan 
+   - MAYAN_DATABASE_PASSWORD=dbpasswd
+   - MAYAN_DATABASE_USER=mayan
+   - MAYAN_DATABASE_CONN_MAX_AGE=60
+  ports:
+   - 81:8000
+  depends_on:
+    - mayandb
+  dns: 192.168.1.1
