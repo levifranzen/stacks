@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+ metabase:
+  container_name: metabase
+  image: metabase/metabase:v0.32.1 
+  networks:
+    - production
+  ports:
+   - "3000:3000"
+  environment:
+   - MB_DB_TYPE=postgres
+   - MB_DB_DBNAME=metabase
+   - MB_DB_PORT=5432
+   - MB_DB_USER=postgres
+   - MB_DB_PASS=YOURDBPASSWORD
+   - MB_DB_HOST=postgres
+   - JAVA_TOOL_OPTIONS=-Xmx2g
+  depends_on:
+   - postgres
+
+ postgres:
+  container_name: postgres
+  image: kiasaki/alpine-postgres:9.4
+  networks:
+   - production
+  volumes:
+    - /docker/postgres:/var/lib/postgresql/data
+  environment:
+   - POSTGRES_DB=metabase
+   - POSTGRES_USER=postgres
+   - POSTGRES_PASSWORD=YOURDBPASSWORD
